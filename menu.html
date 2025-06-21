@@ -1,0 +1,208 @@
+I'll create a responsive restaurant menu page that's optimized for QR code scanning. This will include:
+
+1. A clean, mobile-friendly design with easy navigation
+2. Category sections for different menu items
+3. High-quality food images
+4. Clear pricing and descriptions
+5. Dark mode for better outdoor readability
+6. A simple ordering system (simulated)
+
+Here's the complete HTML file for the restaurant menu:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Haven - Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-dark: #bc2c39;
+            --secondary: #457b9d;
+            --dark: #1d3557;
+            --light: #f1faee;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .dark .bg-white {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        .menu-category {
+            scroll-margin-top: 6rem;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+
+        .item-counter button {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            font-weight: bold;
+        }
+
+        .item-counter button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .dish-card {
+            transition: all 0.3s ease;
+        }
+
+        /* Pulse animation for featured items */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(230, 57, 70, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+        }
+
+        .featured {
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900">
+    <!-- Header with dark mode toggle -->
+    <header class="bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-utensils text-2xl text-red-500"></i>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Gourmet Haven</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex space-x-4">
+                        <a href="#appetizers" class="text-gray-700 dark:text-gray-300 hover:text-red-500">Starters</a>
+                        <a href="#mains" class="text-gray-700 dark:text-gray-300 hover:text-red-500">Mains</a>
+                        <a href="#desserts" class="text-gray-700 dark:text-gray-300 hover:text-red-500">Desserts</a>
+                        <a href="#drinks" class="text-gray-700 dark:text-gray-300 hover:text-red-500">Drinks</a>
+                    </div>
+                    <!-- Cart button -->
+                    <button id="cart-button" class="relative p-2 text-gray-700 dark:text-gray-300 hover:text-red-500">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <!-- Dark mode toggle -->
+                    <button id="theme-toggle" class="p-2 text-gray-700 dark:text-gray-300 hover:text-red-500">
+                        <i class="fas fa-moon hidden dark:block"></i>
+                        <i class="fas fa-sun dark:hidden"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile tabs -->
+            <div class="md:hidden mt-4 overflow-x-auto">
+                <div class="flex space-x-4">
+                    <a href="#appetizers" class="text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 whitespace-nowrap">Starters</a>
+                    <a href="#mains" class="text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 whitespace-nowrap">Mains</a>
+                    <a href="#desserts" class="text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 whitespace-nowrap">Desserts</a>
+                    <a href="#drinks" class="text-sm px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 whitespace-nowrap">Drinks</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Restaurant info -->
+        <section class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Our Menu</h2>
+            <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                Experience culinary excellence with our carefully crafted dishes made from locally sourced ingredients
+            </p>
+        </section>
+
+        <!-- Menu categories -->
+        <div class="flex flex-col space-y-12">
+            <!-- Appetizers -->
+            <section id="appetizers" class="menu-category">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                    <span class="text-red-500 mr-2">•</span> Appetizers & Starters
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dish 1 -->
+                    <div class="dish-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md">
+                        <div class="flex flex-col">
+                            <div class="mb-4 relative">
+                                <img src="https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=600&q=80" 
+                                     alt="Bruschetta" class="w-full h-48 object-cover rounded-lg">
+                            </div>
+                            <h4 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Bruschetta Classica</h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Toasted bread topped with tomatoes, garlic, and fresh basil</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900 dark:text-white">$8.99</span>
+                                <div class="item-counter flex items-center space-x-2">
+                                    <button class="decrease">-</button>
+                                    <span class="count">0</span>
+                                    <button class="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dish 2 - Featured -->
+                    <div class="dish-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md featured">
+                        <span class="featured-badge">Chef's Pick</span>
+                        <div class="flex flex-col">
+                            <div class="mb-4">
+                                <img src="https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=600&q=80" 
+                                     alt="Calamari" class="w-full h-48 object-cover rounded-lg">
+                            </div>
+                            <h4 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Crispy Calamari</h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Tender squid lightly battered and fried, served with spicy aioli</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900 dark:text-white">$12.99</span>
+                                <div class="item-counter flex items-center space-x-2">
+                                    <button class="decrease">-</button>
+                                    <span class="count">0</span>
+                                    <button class="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dish 3 -->
+                    <div class="dish-card bg
